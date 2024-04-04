@@ -4,11 +4,99 @@
     <title>Movie API Documentation</title>
   </head>
   <body>
-    <h1>Welcome to the Movie API Documentation</h1>
+    <h1>Movie API</h1>
+    <p>Welcome to the Movie API documentation!</p>
     <p>
-      This API provides access to a database of movies. You can retrieve
-      information about movies, search for movies, and add new movies to the
-      database.
+      This API allows you to access movie data and perform various operations
+      related to movies.
     </p>
+    <p>Here are some of the main features of the API:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Operation</th>
+          <th>Request Method</th>
+          <th>URL</th>
+          <th>Query Parameters</th>
+          <th>Request Body</th>
+          <th>Response</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Retrieve a list of movies</td>
+          <td>GET</td>
+          <td>/movies</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>List of movies</td>
+        </tr>
+        <tr>
+          <td>Search for movies</td>
+          <td>GET</td>
+          <td>/movies</td>
+          <td>
+            <ul>
+              <li>title (string)</li>
+              <li>genre (string)</li>
+              <li>release_year (number)</li>
+            </ul>
+          </td>
+          <td>N/A</td>
+          <td>List of movies matching the search criteria</td>
+        </tr>
+        <tr>
+          <td>Get detailed information about a specific movie</td>
+          <td>GET</td>
+          <td>/movies/{movie_id}</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>Detailed information about the movie</td>
+        </tr>
+        <tr>
+          <td>Add new movies to the database</td>
+          <td>POST</td>
+          <td>/movies</td>
+          <td>N/A</td>
+          <td>
+            <pre>
+{
+    "title": "Movie Title",
+    "genre": "Action",
+    "release_year": 2022
+}
+                    </pre
+            >
+          </td>
+          <td>Created movie object</td>
+        </tr>
+        <tr>
+          <td>Update movie information</td>
+          <td>PUT</td>
+          <td>/movies/{movie_id}</td>
+          <td>N/A</td>
+          <td>
+            <pre>
+{
+    "title": "Updated Movie Title",
+    "genre": "Adventure",
+    "release_year": 2023
+}
+                    </pre
+            >
+          </td>
+          <td>Updated movie object</td>
+        </tr>
+        <tr>
+          <td>Delete movies from the database</td>
+          <td>DELETE</td>
+          <td>/movies/{movie_id}</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>Success message</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Feel free to explore the API and use it in your projects!</p>
   </body>
 </html>
