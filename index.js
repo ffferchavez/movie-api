@@ -29,15 +29,7 @@ app.post("/movies", async (req, res) => {
       if (movie) {
         return res.status(400).send(req.body.Title + " already exists");
       } else {
-        Movies.create({
-          Title: req.body.Title,
-          Description: req.body.Description,
-          Genre: req.body.Genre,
-          Director: req.body.Director,
-          Actors: req.body.Actors,
-          ImagePath: req.body.ImagePath,
-          Featured: req.body.Featured,
-        })
+        Movies.create(req.body)
           .then((movie) => {
             res.status(201).json(movie);
           })
