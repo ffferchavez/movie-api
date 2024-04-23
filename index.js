@@ -7,7 +7,7 @@ const Models = require("./models.js");
 const { check, validationResult } = require("express-validator");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
   console.log("Listening on Port " + port);
 });
