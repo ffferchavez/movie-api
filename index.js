@@ -8,14 +8,14 @@ const { check, validationResult } = require("express-validator");
 
 const app = express();
 
-/*mongoose.connect("mongodb://localhost:27017/myFlixDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});*/
-mongoose.connect(process.env.CONNECTION_URI, {
+mongoose.connect("mongodb://localhost:27017/myFlixDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+/*mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});*/
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -30,6 +30,10 @@ app.use(morgan("combined")); // Middleware to log all requests
 
 // Auth middleware
 require("./auth")(app);
+
+app.get("/", (req, res) => {
+  res.send("Hello and welcome to my movie app!");
+});
 
 //---------------------------- MOVIES -----------------------------
 
