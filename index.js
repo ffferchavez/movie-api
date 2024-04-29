@@ -7,10 +7,6 @@ const Models = require("./models.js");
 const { check, validationResult } = require("express-validator");
 
 const app = express();
-const port = process.env.PORT || 8080;
-app.listen(port, "0.0.0.0", () => {
-  console.log("Listening on Port " + port);
-});
 
 /*mongoose.connect("mongodb://localhost:27017/myFlixDB", {
   useNewUrlParser: true,
@@ -324,7 +320,12 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error");
 });
 
-// Start the server
+/*// Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
+});*/
+
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0", () => {
+  console.log("Listening on Port " + port);
 });
