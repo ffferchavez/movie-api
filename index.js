@@ -30,7 +30,7 @@ app.use(morgan("combined")); // Middleware to log all requests
 
 // Auth middleware
 require("./auth")(app);
-
+node;
 app.get("/", (req, res) => {
   res.send("Hello and welcome to my movie app!");
 });
@@ -323,11 +323,6 @@ app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).send("Internal Server Error");
 });
-
-/*// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});*/
 
 const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
