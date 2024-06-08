@@ -13,18 +13,18 @@ const app = express();
   useUnifiedTopology: true,
 });*/
 
-/*mongoose.connect(process.env.CONNECTION_URI, {
+mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});*/
+});
 
-mongoose.connect(
+/*mongoose.connect(
   "mongodb+srv://ffferchavez:061993Mf1.@myflixdb.kslptjr.mongodb.net/?retryWrites=true&w=majority&appName=myFlixDB",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   }
-);
+);*/
 
 const Movies = Models.Movie;
 const Users = Models.User;
