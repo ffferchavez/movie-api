@@ -8,8 +8,8 @@ const { check, validationResult } = require("express-validator");
 
 const app = express();
 
-const port = process.env.PORT || 8080;
-const host = process.env.HOST || "0.0.0.0";
+/*const port = process.env.PORT || 8080;
+const host = process.env.HOST || "0.0.0.0";*/
 
 /*mongoose.connect("mongodb://localhost:27017/myFlixDB", {
   useNewUrlParser: true,
@@ -17,10 +17,17 @@ const host = process.env.HOST || "0.0.0.0";
 });*/
 
 const connectionURI = process.env.CONNECTION_URI;
-mongoose.connect(connectionURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose
+  .connect(connectionURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to the database");
+  })
+  .catch((error) => {
+    console.error("Error connecting to the database:", error);
+  });
 
 /*mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
@@ -346,6 +353,6 @@ app.listen(port, "0.0.0.0", () => {
   console.log(`Listening on Port ${port}`);
 });*/
 
-app.listen(port, host, () => {
-  console.log(`Listening on ${host}:${port}`);
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
 });
