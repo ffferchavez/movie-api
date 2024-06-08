@@ -17,9 +17,8 @@ const host = process.env.HOST || "0.0.0.0";*/
   useUnifiedTopology: true,
 });*/
 
-const connectionURI = process.env.CONNECTION_URI;
 mongoose
-  .connect(connectionURI, {
+  .connect(process.env.CONNECTION_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
