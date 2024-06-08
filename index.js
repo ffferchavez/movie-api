@@ -32,7 +32,7 @@ app.use(morgan("combined")); // Middleware to log all requests
 require("./auth")(app);
 node;
 app.get("/", (req, res) => {
-  res.send("Hello and welcome to my movie app!");
+  res.send("Hi, Welcome to my Marvel Movies App!");
 });
 
 //---------------------------- MOVIES -----------------------------
