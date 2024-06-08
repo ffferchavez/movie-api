@@ -8,7 +8,7 @@
     <p>Welcome to the Movie API documentation!</p>
     <p>
       This API allows you to access movie data and perform various operations
-      related to movies.
+      related to movies and users.
     </p>
     <p>Here are some of the main features of the API:</p>
     <table>
@@ -61,12 +61,21 @@
           <td>
             <pre>
 {
-    "title": "Movie Title",
-    "genre": "Action",
-    "release_year": 2022
+    "Title": "Movie Title",
+    "Description": "Movie Description",
+    "Genre": {
+        "Name": "Action",
+        "Description": "Action genre description"
+    },
+    "Director": {
+        "Name": "Director Name",
+        "Bio": "Director Bio"
+    },
+    "Actors": ["Actor 1", "Actor 2"],
+    "ImagePath": "URL to movie image",
+    "Featured": true
 }
-                    </pre
-            >
+            </pre>
           </td>
           <td>Created movie object</td>
         </tr>
@@ -78,12 +87,21 @@
           <td>
             <pre>
 {
-    "title": "Updated Movie Title",
-    "genre": "Adventure",
-    "release_year": 2023
+    "Title": "Updated Movie Title",
+    "Description": "Updated Movie Description",
+    "Genre": {
+        "Name": "Adventure",
+        "Description": "Adventure genre description"
+    },
+    "Director": {
+        "Name": "Updated Director Name",
+        "Bio": "Updated Director Bio"
+    },
+    "Actors": ["Updated Actor 1", "Updated Actor 2"],
+    "ImagePath": "URL to updated movie image",
+    "Featured": true
 }
-                    </pre
-            >
+            </pre>
           </td>
           <td>Updated movie object</td>
         </tr>
@@ -94,6 +112,47 @@
           <td>N/A</td>
           <td>N/A</td>
           <td>Success message</td>
+        </tr>
+        <tr>
+          <td>Retrieve a list of users</td>
+          <td>GET</td>
+          <td>/users</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>List of users</td>
+        </tr>
+        <tr>
+          <td>Get detailed information about a specific user</td>
+          <td>GET</td>
+          <td>/users/{user_id}</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>Detailed information about the user</td>
+        </tr>
+        <tr>
+          <td>Delete users from the database</td>
+          <td>DELETE</td>
+          <td>/users/{user_id}</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>Success message</td>
+        </tr>
+        <tr>
+          <td>Update user information</td>
+          <td>PUT</td>
+          <td>/users/{user_id}</td>
+          <td>N/A</td>
+          <td>
+            <pre>
+{
+    "Username": "Updated Username",
+    "Password": "Updated Password",
+    "Email": "updated@example.com",
+    "Birthday": "Updated Birthday"
+}
+            </pre>
+          </td>
+          <td>Updated user object</td>
         </tr>
       </tbody>
     </table>
