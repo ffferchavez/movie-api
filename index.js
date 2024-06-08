@@ -12,7 +12,13 @@ const app = express();
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });*/
-mongoose.connect(process.env.CONNECTION_URI, {
+
+/*mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});*/
+
+mongoose.connect("https://marvel-flix-c3644575f8db.herokuapp.com/", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -30,7 +36,6 @@ app.use(morgan("combined")); // Middleware to log all requests
 
 // Auth middleware
 require("./auth")(app);
-node;
 app.get("/", (req, res) => {
   res.send("Hi, Welcome to my Marvel Movies App!");
 });
