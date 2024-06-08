@@ -18,10 +18,13 @@ const app = express();
   useUnifiedTopology: true,
 });*/
 
-mongoose.connect("https://marvel-flix-c3644575f8db.herokuapp.com/", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  "mongodb+srv://ffferchavez:061993Mf1.@myflixdb.kslptjr.mongodb.net/?retryWrites=true&w=majority&appName=myFlixDB",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const Movies = Models.Movie;
 const Users = Models.User;
