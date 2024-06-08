@@ -8,15 +8,24 @@ const { check, validationResult } = require("express-validator");
 
 const app = express();
 
+const port = process.env.PORT || 8080;
+const host = process.env.HOST || "0.0.0.0";
+
 /*mongoose.connect("mongodb://localhost:27017/myFlixDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });*/
 
-mongoose.connect(process.env.CONNECTION_URI, {
+const connectionURI = process.env.CONNECTION_URI;
+mongoose.connect(connectionURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+/*mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});*/
 
 /*mongoose.connect(
   "mongodb+srv://ffferchavez:061993Mf1.@myflixdb.kslptjr.mongodb.net/?retryWrites=true&w=majority&appName=myFlixDB",
@@ -332,7 +341,11 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error");
 });
 
-const port = process.env.PORT || 8080;
+/*const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Listening on Port ${port}`);
+});*/
+
+app.listen(port, host, () => {
+  console.log(`Listening on ${host}:${port}`);
 });
