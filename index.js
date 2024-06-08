@@ -332,7 +332,14 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error");
 });
 
-const port = process.env.PORT || 8080;
+/*const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Listening on Port ${port}`);
+});*/
+
+const port = process.env.PORT || 8080;
+const host = process.env.HOST || "0.0.0.0";
+
+app.listen(port, host, () => {
+  console.log(`Listening on ${host}:${port}`);
 });
