@@ -7,6 +7,7 @@ const Models = require("./models.js");
 const { check, validationResult } = require("express-validator");
 
 const app = express();
+const port = 8080;
 
 /*const port = process.env.PORT || 8080;
 const host = process.env.HOST || "0.0.0.0";*/
