@@ -40,31 +40,27 @@ app.get("/", (req, res) => {
 //---------------------------- MOVIES -----------------------------
 
 //POST
-app.post(
-  "/movies",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    await Movies.findOne({ Title: req.body.Title })
-      .then((movie) => {
-        if (movie) {
-          return res.status(400).send(req.body.Title + " already exists");
-        } else {
-          Movies.create(req.body)
-            .then((movie) => {
-              res.status(201).json(movie);
-            })
-            .catch((error) => {
-              console.error(error);
-              res.status(500).send("Error: " + error);
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send("Error: " + error);
-      });
-  }
-);
+app.post("/movies", async (req, res) => {
+  await Movies.findOne({ Title: req.body.Title })
+    .then((movie) => {
+      if (movie) {
+        return res.status(400).send(req.body.Title + " already exists");
+      } else {
+        Movies.create(req.body)
+          .then((movie) => {
+            res.status(201).json(movie);
+          })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send("Error: " + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
+});
 
 //GET ALL MOVIES
 app.get(
