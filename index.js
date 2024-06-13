@@ -7,19 +7,9 @@ const Models = require("./models.js");
 const { check, validationResult } = require("express-validator");
 
 const app = express();
-const port = 8080;
 
-/*const port = process.env.PORT || 8080;
-const host = process.env.HOST || "0.0.0.0";*/
-
-/*mongoose.connect("mongodb://localhost:27017/myFlixDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});*/
-
-const connectionURI = process.env.CONNECTION_URI;
 mongoose
-  .connect(connectionURI, {
+  .connect(process.env.CONNECTION_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -29,19 +19,6 @@ mongoose
   .catch((error) => {
     console.error("Error connecting to the database:", error);
   });
-
-/*mongoose.connect(process.env.CONNECTION_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});*/
-
-/*mongoose.connect(
-  "mongodb+srv://ffferchavez:061993Mf1.@myflixdb.kslptjr.mongodb.net/?retryWrites=true&w=majority&appName=myFlixDB",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);*/
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -63,31 +40,27 @@ app.get("/", (req, res) => {
 //---------------------------- MOVIES -----------------------------
 
 //POST
-app.post(
-  "/movies",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    await Movies.findOne({ Title: req.body.Title })
-      .then((movie) => {
-        if (movie) {
-          return res.status(400).send(req.body.Title + " already exists");
-        } else {
-          Movies.create(req.body)
-            .then((movie) => {
-              res.status(201).json(movie);
-            })
-            .catch((error) => {
-              console.error(error);
-              res.status(500).send("Error: " + error);
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send("Error: " + error);
-      });
-  }
-);
+app.post("/movies", async (req, res) => {
+  await Movies.findOne({ Title: req.body.Title })
+    .then((movie) => {
+      if (movie) {
+        return res.status(400).send(req.body.Title + " already exists");
+      } else {
+        Movies.create(req.body)
+          .then((movie) => {
+            res.status(201).json(movie);
+          })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send("Error: " + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
+});
 
 //GET ALL MOVIES
 app.get(
@@ -112,6 +85,25 @@ app.get(
   async (req, res) => {
     await Movies.findOne({ Title: req.params.Title })
       .then((movie) => {
+        res.json(movie);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
+
+// Get a movie by ID
+app.get(
+  "/movies/:id",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    await Movies.findById(req.params.id)
+      .then((movie) => {
+        if (!movie) {
+          return res.status(404).send("Movie not found");
+        }
         res.json(movie);
       })
       .catch((err) => {
@@ -191,7 +183,7 @@ app.post(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    let hashedPassword = Users.hashedPassword(req.body.Password);
+    let hashPassword = Users.hashPassword(req.body.Password);
     await Users.findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
@@ -199,7 +191,7 @@ app.post(
         } else {
           Users.create({
             Username: req.body.Username,
-            Password: hashedPassword,
+            Password: hashPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday,
           })
@@ -349,11 +341,11 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error");
 });
 
-/*const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Listening on Port ${port}`);
-});*/
-
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
 });
+
+/*app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
+});*/
