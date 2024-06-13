@@ -78,18 +78,14 @@ app.get(
   }
 );
 
-// Get a movie by id
+// Get a movie by title
 app.get(
-  "/movies/id/:id",
+  "/movies/:Title",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    await Movies.findById(req.params.id)
+    await Movies.findOne({ Title: req.params.Title })
       .then((movie) => {
-        if (!movie) {
-          res.status(404).send("Movie not found");
-        } else {
-          res.json(movie);
-        }
+        res.json(movie);
       })
       .catch((err) => {
         console.error(err);
@@ -98,13 +94,13 @@ app.get(
   }
 );
 
-//Update movie by id
+//Update movie by title
 app.put(
-  "/movies/id/:id",
+  "/movies/:Title",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    await Movies.findByIdAndUpdate(
-      req.params.id,
+    await Movies.findOneAndUpdate(
+      { Title: req.params.Title },
       {
         $set: {
           Title: req.body.Title,
@@ -128,17 +124,17 @@ app.put(
   }
 );
 
-// Delete a movie by id
+// Delete a movie by title
 app.delete(
-  "/movies/id/:id",
+  "/movies/:Title",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    await Movies.findByIdAndRemove(req.params.id)
+    await Movies.findOneAndRemove({ Title: req.params.Title })
       .then((movie) => {
         if (!movie) {
-          res.status(400).send("Movie was not found");
+          res.status(400).send(req.params.Title + " was not found");
         } else {
-          res.status(200).send("Movie was deleted.");
+          res.status(200).send(req.params.Title + " was deleted.");
         }
       })
       .catch((err) => {
@@ -314,3 +310,23 @@ app.delete(
         console.error(err);
         res.status(500).send("Error: " + err);
       });
+  }
+);
+
+// Serve the documentation.html file
+app.use(express.static("public"));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send("Internal Server Error");
+});
+
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Listening on Port ${port}`);
+});
+
+/*app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
+});*/
