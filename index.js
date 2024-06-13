@@ -94,6 +94,25 @@ app.get(
   }
 );
 
+// Get a movie by ID
+app.get(
+  "/movies/:id",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    await Movies.findById(req.params.id)
+      .then((movie) => {
+        if (!movie) {
+          return res.status(404).send("Movie not found");
+        }
+        res.json(movie);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
+
 //Update movie by title
 app.put(
   "/movies/:Title",
