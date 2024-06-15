@@ -99,16 +99,14 @@ app.get(
   "/movies/:id",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    try {
-      const movie = await Movies.findById(req.params.id);
-      if (!movie) {
-        return res.status(404).send("Movie not found");
-      }
-      res.json(movie);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Error: " + err.message);
-    }
+    await Movies.findOne({ id: req.params.id })
+      .then((movie) => {
+        res.json(movie);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
   }
 );
 
