@@ -1,161 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Movie API Documentation</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>myFlix API Documentation</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
   </head>
   <body>
-    <h1>Movie API</h1>
-    <p>Welcome to the Movie API documentation!</p>
-    <p>
-      This API allows you to access movie data and perform various operations
-      related to movies and users.
-    </p>
-    <p>Here are some of the main features of the API:</p>
+    <h1>myFlix API Documentation</h1>
+    <h2>Movies Endpoints</h2>
     <table>
-      <thead>
-        <tr>
-          <th>Operation</th>
-          <th>Request Method</th>
-          <th>URL</th>
-          <th>Query Parameters</th>
-          <th>Request Body</th>
-          <th>Response</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Retrieve a list of movies</td>
-          <td>GET</td>
-          <td>/movies</td>
-          <td>N/A</td>
-          <td>N/A</td>
-          <td>List of movies</td>
-        </tr>
-        <tr>
-          <td>Search for movies</td>
-          <td>GET</td>
-          <td>/movies</td>
-          <td>
-            <ul>
-              <li>title (string)</li>
-              <li>genre (string)</li>
-              <li>release_year (number)</li>
-            </ul>
-          </td>
-          <td>N/A</td>
-          <td>List of movies matching the search criteria</td>
-        </tr>
-        <tr>
-          <td>Get detailed information about a specific movie</td>
-          <td>GET</td>
-          <td>/movies/{movie_id}</td>
-          <td>N/A</td>
-          <td>N/A</td>
-          <td>Detailed information about the movie</td>
-        </tr>
-        <tr>
-          <td>Add new movies to the database</td>
-          <td>POST</td>
-          <td>/movies</td>
-          <td>N/A</td>
-          <td>
-            <pre>
-{
-    "Title": "Movie Title",
-    "Description": "Movie Description",
-    "Genre": {
-        "Name": "Action",
-        "Description": "Action genre description"
-    },
-    "Director": {
-        "Name": "Director Name",
-        "Bio": "Director Bio"
-    },
-    "Actors": ["Actor 1", "Actor 2"],
-    "ImagePath": "URL to movie image",
-    "Featured": true
-}
-            </pre>
-          </td>
-          <td>Created movie object</td>
-        </tr>
-        <tr>
-          <td>Update movie information</td>
-          <td>PUT</td>
-          <td>/movies/{movie_id}</td>
-          <td>N/A</td>
-          <td>
-            <pre>
-{
-    "Title": "Updated Movie Title",
-    "Description": "Updated Movie Description",
-    "Genre": {
-        "Name": "Adventure",
-        "Description": "Adventure genre description"
-    },
-    "Director": {
-        "Name": "Updated Director Name",
-        "Bio": "Updated Director Bio"
-    },
-    "Actors": ["Updated Actor 1", "Updated Actor 2"],
-    "ImagePath": "URL to updated movie image",
-    "Featured": true
-}
-            </pre>
-          </td>
-          <td>Updated movie object</td>
-        </tr>
-        <tr>
-          <td>Delete movies from the database</td>
-          <td>DELETE</td>
-          <td>/movies/{movie_id}</td>
-          <td>N/A</td>
-          <td>N/A</td>
-          <td>Success message</td>
-        </tr>
-        <tr>
-          <td>Retrieve a list of users</td>
-          <td>GET</td>
-          <td>/users</td>
-          <td>N/A</td>
-          <td>N/A</td>
-          <td>List of users</td>
-        </tr>
-        <tr>
-          <td>Get detailed information about a specific user</td>
-          <td>GET</td>
-          <td>/users/{user_id}</td>
-          <td>N/A</td>
-          <td>N/A</td>
-          <td>Detailed information about the user</td>
-        </tr>
-        <tr>
-          <td>Delete users from the database</td>
-          <td>DELETE</td>
-          <td>/users/{user_id}</td>
-          <td>N/A</td>
-          <td>N/A</td>
-          <td>Success message</td>
-        </tr>
-        <tr>
-          <td>Update user information</td>
-          <td>PUT</td>
-          <td>/users/{user_id}</td>
-          <td>N/A</td>
-          <td>
-            <pre>
-{
-    "Username": "Updated Username",
-    "Password": "Updated Password",
-    "Email": "updated@example.com",
-    "Birthday": "Updated Birthday"
-}
-            </pre>
-          </td>
-          <td>Updated user object</td>
-        </tr>
-      </tbody>
+      <tr>
+        <th>Request</th>
+        <th>URL</th>
+        <th>Response</th>
+      </tr>
+      <tr>
+        <td>Get all movies</td>
+        <td>GET /movies</td>
+        <td>List of all movies</td>
+      </tr>
+      <tr>
+        <td>Get a single movie by title</td>
+        <td>GET /movies/:title</td>
+        <td>Movie details</td>
+      </tr>
+      <tr>
+        <td>Get a genre by name</td>
+        <td>GET /genres/:genreName</td>
+        <td>Genre details</td>
+      </tr>
+      <tr>
+        <td>Get a director by name</td>
+        <td>GET /directors/:directorName</td>
+        <td>Director details</td>
+      </tr>
     </table>
-    <p>Feel free to explore the API and use it in your projects!</p>
+
+    <h2>Users Endpoints</h2>
+    <table>
+      <tr>
+        <th>Request</th>
+        <th>URL</th>
+        <th>Response</th>
+      </tr>
+      <tr>
+        <td>Register a new user</td>
+        <td>POST /users</td>
+        <td>New user details</td>
+      </tr>
+      <tr>
+        <td>Update user information</td>
+        <td>PUT /users/:userId</td>
+        <td>Updated user details</td>
+      </tr>
+      <tr>
+        <td>Add a movie to user's favorites</td>
+        <td></td>
+      </tr>
+    </table>
   </body>
 </html>
