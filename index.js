@@ -96,10 +96,10 @@ app.get(
 
 // Get a movie by ID
 app.get(
-  "/movies/:_id",
+  "/movies/:id",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    await Movies.findOne({ _id: req.params._id })
+    await Movies.findOne({ id: req.params.id })
       .then((movie) => {
         res.json(movie);
       })
