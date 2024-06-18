@@ -161,9 +161,7 @@ app.put(
     check(
       "Username",
       "Username contains non alphanumeric characters - not allowed."
-    )
-      .optional()
-      .isAlphanumeric(),
+    ).optional().isAlphanumeric(),
     check("Password", "Password must have at least 6 characters")
       .optional()
       .isLength({ min: 6 }),
@@ -176,31 +174,42 @@ app.put(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    let hashPassword = Users.hashPassword(req.body.Password);
-    // CONDITION TO CHECK ADDED HERE
-    if (req.user.Username !== req.params.Username) {
-      return res.status(400).send("Permission denied");
-    }
-    // CONDITION ENDS
-    await Users.findOneAndUpdate(
-      { Username: req.params.Username },
-      {
-        $set: {
-          Username: req.body.Username,
-          Password: hashPassword,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday,
+
+    try {
+      // Check if current user is authorized to update
+      if (req.user._id !== req.params.id) {
+        return res.status(403).send("Permission denied");
+      }
+
+      // Hash password if provided
+      let hashPassword;
+      if (req.body.Password) {
+        hashPassword = Users.hashPassword(req.body.Password);
+      }
+
+      // Find user by ID and update
+      const updatedUser = await Users.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            Username: req.body.Username,
+            Password: hashPassword,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday,
+          },
         },
-      },
-      { new: true }
-    ) // This line makes sure that the updated document is returned
-      .then((updatedUser) => {
-        res.json(updatedUser);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).send("Error: " + err);
-      });
+        { new: true } // Return the updated document
+      );
+
+      if (!updatedUser) {
+        return res.status(404).send("User not found");
+      }
+
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).send("Error updating user");
+    }
   }
 );
 
