@@ -120,12 +120,12 @@ app.post(
     ).isAlphanumeric(),
     check(
       "Password",
-      "Password is required and must have at least 5 characters"
+      "Password is required and must have at least 6 characters"
     ).isLength({ min: 6 }),
     check("Email", "Email does not appear to be valid").isEmail(),
     check("Birthday", "Birthday is not a valid date")
       .optional()
-      .isDate({ format: "mm-dd-yyyy" }),
+      .isDate({ format: "yyyy-mm-dd" }),
   ],
   async (req, res) => {
     // Validate inputs
@@ -176,13 +176,13 @@ app.put(
     )
       .optional()
       .isAlphanumeric(),
-    check("Password", "Password must have at least 10 characters")
+    check("Password", "Password must have at least 6 characters")
       .optional()
       .isLength({ min: 6 }),
     check("Email", "Email does not appear to be valid").optional().isEmail(),
     check("Birthday", "Birthday is not a valid date")
       .optional()
-      .isDate({ format: "mm-dd-yyy" }),
+      .isDate({ format: "yyyy-mm-dd" }),
   ],
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
