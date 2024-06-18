@@ -125,7 +125,7 @@ app.post(
     check("Email", "Email does not appear to be valid").isEmail(),
     check("Birthday", "Birthday is not a valid date")
       .optional()
-      .isDate({ format: "dd-mm-yyyy" }),
+      .isDate({ format: "mm-dd-yyyy" }),
   ],
   async (req, res) => {
     // Validate inputs
@@ -182,7 +182,7 @@ app.put(
     check("Email", "Email does not appear to be valid").optional().isEmail(),
     check("Birthday", "Birthday is not a valid date")
       .optional()
-      .isDate({ format: "dd-mm-yyy" }),
+      .isDate({ format: "mm-dd-yyy" }),
   ],
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
