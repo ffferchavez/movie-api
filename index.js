@@ -4,20 +4,11 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const Models = require("./models.js");
 const { check, validationResult } = require("express-validator");
+const cors = require("cors");
 
 const app = express();
 
-// Middleware to allow all origins
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*"); // Allows all origins
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  next();
-});
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
@@ -119,32 +110,26 @@ app.get(
 app.post(
   "/users",
   [
-    check("Username", "Username is required").isLength({ min: 5 }),
-    check(
-      "Username",
-      "Username contains non alphanumeric characters - not allowed."
-    ).isAlphanumeric(),
-    check(
-      "Password",
-      "Password is required and must have at least 6 characters"
-    ).isLength({ min: 6 }),
-    check("Email", "Email does not appear to be valid").isEmail(),
+    check("Username", "Username is required and must be at least 5 characters long")
+      .isLength({ min: 5 }),
+    check("Username", "Username must be alphanumeric")
+      .isAlphanumeric(),
+    check("Password", "Password is required and must be at least 6 characters long")
+      .isLength({ min: 6 }),
+    check("Email", "Email does not appear to be valid")
+      .isEmail(),
   ],
   async (req, res) => {
-    // Validate inputs
-    const errors = validationResult(req);
+    // check the validation object for errors
+    let errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-
-    // Hash password
-    const hashPassword = Users.hashPassword(req.body.Password);
-
-    // Check if username already exists
+    let hashPassword = Users.hashPassword(req.body.Password);
     await Users.findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
-          return res.status(400).send(req.body.Username + " already exists");
+          return res.status(400).send(req.body.Username + "already exists");
         } else {
           Users.create({
             Username: req.body.Username,
@@ -155,15 +140,15 @@ app.post(
             .then((user) => {
               res.status(201).json(user);
             })
-            .catch((err) => {
-              console.error(err);
-              res.status(500).send("Error: " + err);
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send("Error: " + error);
             });
         }
       })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("Error: " + err);
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
       });
   }
 );
@@ -186,21 +171,19 @@ app.put(
   ],
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    // Validate inputs
-    const errors = validationResult(req);
+    // check the validation object for errors
+    let errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-
-    // Hash password if provided
-    let hashPassword;
-    if (req.body.Password) {
-      hashPassword = Users.hashPassword(req.body.Password);
+    let hashPassword = Users.hashPassword(req.body.Password);
+    // CONDITION TO CHECK ADDED HERE
+    if (req.user.Username !== req.params.Username) {
+      return res.status(400).send("Permission denied");
     }
-
-    // Update user
+    // CONDITION ENDS
     await Users.findOneAndUpdate(
-      { _id: req.params.id },
+      { Username: req.params.Username },
       {
         $set: {
           Username: req.body.Username,
@@ -210,15 +193,12 @@ app.put(
         },
       },
       { new: true }
-    )
+    ) // This line makes sure that the updated document is returned
       .then((updatedUser) => {
-        if (!updatedUser) {
-          return res.status(404).send("User not found");
-        }
-        res.status(200).json(updatedUser);
+        res.json(updatedUser);
       })
       .catch((err) => {
-        console.error(err);
+        console.log(err);
         res.status(500).send("Error: " + err);
       });
   }
