@@ -24,6 +24,12 @@ app.use(passport.initialize());
 app.use(morgan("combined")); // Logging middleware
 
 // MongoDB connection
+
+/*mongoose.connect("mongodb://localhost:27017/myFlixDB", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});*/
+
 mongoose
   .connect(process.env.CONNECTION_URI, {
     useNewUrlParser: true,
@@ -123,9 +129,6 @@ app.post(
       "Password is required and must have at least 6 characters"
     ).isLength({ min: 6 }),
     check("Email", "Email does not appear to be valid").isEmail(),
-    check("Birthday", "Birthday is not a valid date")
-      .optional()
-      .isDate({ format: "yyyy-mm-dd" }),
   ],
   async (req, res) => {
     // Validate inputs
@@ -135,7 +138,7 @@ app.post(
     }
 
     // Hash password
-    const hashedPassword = Users.hashPassword(req.body.Password);
+    const hashPassword = Users.hashPassword(req.body.Password);
 
     // Check if username already exists
     await Users.findOne({ Username: req.body.Username })
@@ -145,7 +148,7 @@ app.post(
         } else {
           Users.create({
             Username: req.body.Username,
-            Password: hashedPassword,
+            Password: hashPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday,
           })
@@ -180,9 +183,6 @@ app.put(
       .optional()
       .isLength({ min: 6 }),
     check("Email", "Email does not appear to be valid").optional().isEmail(),
-    check("Birthday", "Birthday is not a valid date")
-      .optional()
-      .isDate({ format: "yyyy-mm-dd" }),
   ],
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
@@ -193,9 +193,9 @@ app.put(
     }
 
     // Hash password if provided
-    let hashedPassword;
+    let hashPassword;
     if (req.body.Password) {
-      hashedPassword = Users.hashPassword(req.body.Password);
+      hashPassword = Users.hashPassword(req.body.Password);
     }
 
     // Update user
@@ -204,7 +204,7 @@ app.put(
       {
         $set: {
           Username: req.body.Username,
-          Password: hashedPassword,
+          Password: hashPassword,
           Email: req.body.Email,
           Birthday: req.body.Birthday,
         },
