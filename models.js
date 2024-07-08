@@ -30,7 +30,7 @@ const userSchema = mongoose.Schema({
 });
 
 // Hash password middleware
-userSchema.pre("save", function (next) {
+/*userSchema.pre("save", function (next) {
   let user = this;
   if (!user.isModified("Password")) return next();
   bcrypt.hash(user.Password, 10, function (err, hash) {
@@ -38,7 +38,11 @@ userSchema.pre("save", function (next) {
     user.Password = hash;
     next();
   });
-});
+});*/
+
+userSchema.statics.hashPassword = (password) => {
+  return bcrypt.hashSync(password, 10);
+};
 
 // Validate password method
 userSchema.methods.validatePassword = function (password) {
