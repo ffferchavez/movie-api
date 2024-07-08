@@ -110,14 +110,16 @@ app.get(
 app.post(
   "/users",
   [
-    check("Username", "Username is required and must be at least 5 characters long")
-      .isLength({ min: 5 }),
-    check("Username", "Username must be alphanumeric")
-      .isAlphanumeric(),
-    check("Password", "Password is required and must be at least 6 characters long")
-      .isLength({ min: 6 }),
-    check("Email", "Email does not appear to be valid")
-      .isEmail(),
+    check(
+      "Username",
+      "Username is required and must be at least 5 characters long"
+    ).isLength({ min: 5 }),
+    check("Username", "Username must be alphanumeric").isAlphanumeric(),
+    check(
+      "Password",
+      "Password is required and must be at least 6 characters long"
+    ).isLength({ min: 6 }),
+    check("Email", "Email does not appear to be valid.").isEmail(),
   ],
   async (req, res) => {
     // check the validation object for errors
@@ -161,7 +163,9 @@ app.put(
     check(
       "Username",
       "Username contains non alphanumeric characters - not allowed."
-    ).optional().isAlphanumeric(),
+    )
+      .optional()
+      .isAlphanumeric(),
     check("Password", "Password must have at least 6 characters")
       .optional()
       .isLength({ min: 6 }),
