@@ -127,7 +127,7 @@ app.post(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    let hashPassword = Users.hashPassword(req.body.Password);
+    let hashedPassword = Users.hashPassword(req.body.Password);
     await Users.findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
@@ -135,7 +135,7 @@ app.post(
         } else {
           Users.create({
             Username: req.body.Username,
-            Password: hashPassword,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday,
           })
@@ -186,9 +186,9 @@ app.put(
       }
 
       // Hash password if provided
-      let hashPassword;
+      let hashedPassword;
       if (req.body.Password) {
-        hashPassword = Users.hashPassword(req.body.Password);
+        hashedPassword = Users.hashPassword(req.body.Password);
       }
 
       // Find user by ID and update
@@ -197,7 +197,7 @@ app.put(
         {
           $set: {
             Username: req.body.Username,
-            Password: hashPassword,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday,
           },
