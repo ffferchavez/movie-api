@@ -1,6 +1,12 @@
 /**
- * @fileoverview This file is the main entry point for the myFlix API server.
- * It sets up the express server, connects to the MongoDB database, and defines the various API endpoints.
+ * @fileoverview Main entry point for the Express application.
+ * @requires express
+ * @requires morgan
+ * @requires mongoose
+ * @requires passport
+ * @requires Models
+ * @requires express-validator
+ * @requires cors
  */
 
 const express = require("express");
@@ -19,12 +25,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(morgan("combined")); // Logging middleware
 
-// MongoDB local connection
-
-/*mongoose.connect("mongodb://localhost:27017/myFlixDB", {
+// MongoDB connection
+// Uncomment the following line to use local MongoDB connection
+/*
+mongoose.connect("mongodb://localhost:27017/myFlixDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});*/
+});
+*/
 
 mongoose
   .connect(process.env.CONNECTION_URI, {
@@ -44,29 +52,29 @@ const Users = Models.User;
 // Auth middleware
 require("./auth")(app);
 
-// Routes
-
 /**
- * Root endpoint
- * @name GetRoot
  * @function
- * @memberof module:routes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {string} Welcome message
+ * @name getRoot
+ * @description Root endpoint that welcomes users to the app.
+ * @memberof module:express
+ * @instance
+ * @route {GET} /
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.get("/", (req, res) => {
   res.send("Hi, Welcome to my Marvel Movies App!");
 });
 
 /**
- * Get all movies
- * @name GetMovies
  * @function
- * @memberof module:routes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {JSON} List of all movies
+ * @name getAllMovies
+ * @description Get all movies, requires JWT authentication.
+ * @memberof module:express
+ * @instance
+ * @route {GET} /movies
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.get(
   "/movies",
@@ -83,13 +91,14 @@ app.get(
 );
 
 /**
- * Get a movie by title
- * @name GetMovie
  * @function
- * @memberof module:routes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {JSON} Movie details
+ * @name getMovieByTitle
+ * @description Get a movie by title, requires JWT authentication.
+ * @memberof module:express
+ * @instance
+ * @route {GET} /movies/:title
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.get(
   "/movies/:title",
@@ -106,13 +115,14 @@ app.get(
 );
 
 /**
- * Get a genre by name
- * @name GetGenre
  * @function
- * @memberof module:routes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {JSON} Genre details
+ * @name getGenreByName
+ * @description Get a genre by name, requires JWT authentication.
+ * @memberof module:express
+ * @instance
+ * @route {GET} /movies/genre/:genreName
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.get(
   "/movies/genre/:genreName",
@@ -129,13 +139,14 @@ app.get(
 );
 
 /**
- * Get a director by name
- * @name GetDirector
  * @function
- * @memberof module:routes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {JSON} Director details
+ * @name getDirectorByName
+ * @description Get a director by name, requires JWT authentication.
+ * @memberof module:express
+ * @instance
+ * @route {GET} /movies/director/:directorName
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.get(
   "/movies/director/:directorName",
@@ -152,13 +163,14 @@ app.get(
 );
 
 /**
- * Register a new user
- * @name RegisterUser
  * @function
- * @memberof module:routes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {JSON} New user details
+ * @name registerUser
+ * @description Register a new user with validation.
+ * @memberof module:express
+ * @instance
+ * @route {POST} /users
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.post(
   "/users",
@@ -184,7 +196,7 @@ app.post(
     await Users.findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
-          return res.status(400).send(req.body.Username + " already exists");
+          return res.status(400).send(req.body.Username + "already exists");
         } else {
           Users.create({
             Username: req.body.Username,
@@ -209,13 +221,14 @@ app.post(
 );
 
 /**
- * Update user info
- * @name UpdateUser
  * @function
- * @memberof module:routes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {JSON} Updated user details
+ * @name updateUser
+ * @description Update user information with validation and password hashing.
+ * @memberof module:express
+ * @instance
+ * @route {PUT} /users/:id
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.put(
   "/users/:id",
@@ -279,13 +292,14 @@ app.put(
 );
 
 /**
- * Add a movie to user's favorites
- * @name AddFavoriteMovie
  * @function
- * @memberof module:routes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {JSON} Updated user details with favorite movies
+ * @name addFavoriteMovie
+ * @description Add a movie to a user's favorites.
+ * @memberof module:express
+ * @instance
+ * @route {POST} /users/:id/favorites/:movieId
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.post(
   "/users/:id/favorites/:movieId",
@@ -310,13 +324,14 @@ app.post(
 );
 
 /**
- * Remove a movie from user's favorites
- * @name RemoveFavoriteMovie
  * @function
- * @memberof module:routes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {JSON} Updated user details with favorite movies
+ * @name removeFavoriteMovie
+ * @description Remove a movie from a user's favorites.
+ * @memberof module:express
+ * @instance
+ * @route {DELETE} /users/:id/favorites/:movieId
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.delete(
   "/users/:id/favorites/:movieId",
@@ -341,53 +356,51 @@ app.delete(
 );
 
 /**
- * Delete a user account
- * @name DeleteUser
  * @function
- * @memberof module:routes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {string} Success message
+ * @name deleteUser
+ * @description Delete a user by ID.
+ * @memberof module:express
+ * @instance
+ * @route {DELETE} /users/:id
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.delete(
   "/users/:id",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    try {
-      // Check if current user is authorized to delete
-      if (req.user._id !== req.params.id) {
-        return res.status(403).send("Permission denied");
-      }
-
-      const deletedUser = await Users.findByIdAndDelete(req.params.id);
-      if (!deletedUser) {
-        return res.status(404).send("User not found");
-      }
-      res.status(200).send("User deleted successfully");
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      res.status(500).send("Error deleting user");
-    }
+    await Users.findOneAndDelete({ _id: req.params.id })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).send("User not found");
+        }
+        res.status(200).send("User deleted successfully");
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
   }
 );
 
 /**
- * Error handler middleware
- * @name ErrorHandler
  * @function
- * @memberof module:routes
- * @param {Object} err - Error object
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
+ * @name errorHandler
+ * @description Error handling middleware for the application.
+ * @memberof module:express
+ * @instance
+ * @param {express.ErrorRequestHandler} err - The error object.
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @param {express.NextFunction} next - The next middleware function.
  */
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Something broke!");
+  res.status(500).send("Internal Server Error");
 });
 
-// Start server
+// Server setup
 const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
-  console.log("Listening on Port " + port);
+  console.log(`Listening on Port ${port}`);
 });

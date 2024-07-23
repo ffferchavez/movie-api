@@ -1,19 +1,23 @@
 /**
- * @fileoverview This file handles the user authentication process using Passport.
- * It defines the login route and JWT strategy for authentication.
+ * @fileoverview Authentication-related routes and middleware.
+ * @requires jwt
+ * @requires passport
+ * @requires ./passport
  */
 
 const jwtSecret = "your_jwt_secret"; // This has to be the same key used in the JWTStrategy
-const jwt = require("jsonwebtoken");
-const passport = require("passport");
+
+const jwt = require("jsonwebtoken"),
+  passport = require("passport");
 
 require("./passport"); // Your local passport file
 
 /**
- * Generates a JWT token for a user
- * @function generateJWTToken
- * @param {Object} user - The user object
- * @returns {string} JWT token
+ * Generates a JWT token for a given user.
+ *
+ * @function
+ * @param {Object} user - The user object to be encoded in the JWT.
+ * @returns {string} The generated JWT token.
  */
 let generateJWTToken = (user) => {
   return jwt.sign(user, jwtSecret, {
@@ -24,14 +28,24 @@ let generateJWTToken = (user) => {
 };
 
 /**
- * POST login endpoint
- * @name LoginUser
+ * Configures the login route for authenticating users with basic HTTP authentication and generating a JWT token.
+ *
  * @function
- * @memberof module:auth
- * @param {Object} router - Express router object
- * @returns {JSON} User object with JWT token
+ * @param {Object} router - The Express router object to which the route will be added.
+ * @returns {void}
  */
 module.exports = (router) => {
+  /**
+   * POST login route for user authentication.
+   * Utilizes Passport's 'local' strategy to authenticate the user and generate a JWT token upon successful login.
+   *
+   * @name postLogin
+   * @memberof module:express
+   * @instance
+   * @route {POST} /login
+   * @param {express.Request} req - The request object containing user credentials.
+   * @param {express.Response} res - The response object containing the authentication result and JWT token.
+   */
   router.post("/login", (req, res) => {
     passport.authenticate("local", { session: false }, (error, user, info) => {
       if (error || !user) {
